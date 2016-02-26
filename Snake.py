@@ -1,33 +1,56 @@
 import pygame, sys
 from pygame import *
 
-FIELD_SIZE = 2, 10
-FPS = 30
+FPS = 10
 NORMAL, LEFT, RIGHT, UP, DOWN = 0, 1, 2, 3, 4
 TILE_SIZE = 20
+window_width = 800
+window_height = 600
+
 
 class Point:
     def __init__(self, x, y):
         self.x = x
         self.y = y
 
+
 class Snake:
     def __init__(self, start_x=0, start_y=0):
         self.state = NORMAL
+        self.speed = 20
         self.links = []
         self.links.append(Point(start_x, start_y))
         self.links.append(Point(2, 3))
         self.links.append(Point(2, 4))
         self.links.append(Point(2, 5))
         self.links.append(Point(2, 6))
-        # self.links.append([2, 3])
-        # self.links.append([2, 4])
-        # self.links.append([2, 5])
-        # self.links.append([2, 6])
+        self.links.append(Point(2, 7))
+        self.links.append(Point(2, 8))
+        self.links.append(Point(2, 9))
+        self.links.append(Point(2, 10))
+        self.links.append(Point(2, 11))
+        self.links.append(Point(2, 12))
+        self.links.append(Point(2, 13))
+        self.links.append(Point(2, 14))
+        self.links.append(Point(2, 15))
+        self.links.append(Point(2, 16))
+        self.links.append(Point(2, 17))
+        self.links.append(Point(2, 18))
+        self.links.append(Point(2, 19))
+        self.links.append(Point(2, 20))
+        self.links.append(Point(2, 21))
+        self.links.append(Point(2, 22))
+        self.links.append(Point(2, 23))
+        self.links.append(Point(2, 24))
+        self.links.append(Point(2, 25))
+        self.links.append(Point(2, 26))
+        self.links.append(Point(2, 27))
+        self.links.append(Point(2, 28))
         self.link_size = (TILE_SIZE, TILE_SIZE)
         self.link_img = pygame.Surface(self.link_size)
         self.draw_link()
         self.i = 0
+        self.field_size = Point(int(window_width / TILE_SIZE), int(window_height / TILE_SIZE))
 
     def draw_link(self):
         pygame.draw.rect(self.link_img, (0, 0, 200), ((0, 0), self.link_size))
@@ -35,7 +58,7 @@ class Snake:
 
     def update(self, dt):
         self.i += 1
-        if self.i == 2:
+        if self.i == 1:
             self.move()
             self.i = 0
         # LEFT and RIGHT
@@ -50,18 +73,20 @@ class Snake:
 
     def events(self, event):
         if event.type == pygame.KEYDOWN:
-            # if self.state == RIGHT:
                 if event.key == pygame.K_LEFT:
-                    self.state = LEFT
-            # if self.state == LEFT:
+                    if self.state != RIGHT:
+                        self.state = LEFT
                 if event.key == pygame.K_RIGHT:
-                    self.state = RIGHT
-            # if self.state == DOWN:
+                    if self.state != LEFT:
+                        self.state = RIGHT
                 if event.key == pygame.K_UP:
-                    self.state = UP
-            # if self.state == UP:
+                    if self.state != DOWN:
+                        self.state = UP
                 if event.key == pygame.K_DOWN:
-                    self.state = DOWN
+                    if self.state != UP:
+                        self.state = DOWN
+                if event.key == pygame.K_END:
+                        self.speed - 1
 
     def render(self, screen):
         for link in self.links:
@@ -84,8 +109,6 @@ class Snake:
         print(self.links[0].x)
         print(self.links[0].y)
 
-window_width = 800
-window_height = 600
 
 snake = Snake(2, 2)
 game_screen = pygame.Surface((window_width, window_height - TILE_SIZE))
@@ -117,3 +140,4 @@ while not done:  # главный цикл программы
     pygame.draw.line(game_screen, (0, 255, 0), (0, 0), (window_width, 0))
     display.blit(game_screen, (0, TILE_SIZE))
     pygame.display.flip()
+    print(snake.field_size)
