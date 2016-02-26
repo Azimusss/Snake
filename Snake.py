@@ -4,7 +4,7 @@ from pygame import *
 FIELD_SIZE = 2, 10
 FPS = 30
 NORMAL, LEFT, RIGHT, UP, DOWN = 0, 1, 2, 3, 4
-TILE_SIZE = 10
+TILE_SIZE = 20
 
 class Point:
     def __init__(self, x, y):
@@ -35,7 +35,7 @@ class Snake:
 
     def update(self, dt):
         self.i += 1
-        if self.i == 1:
+        if self.i == 2:
             self.move()
             self.i = 0
         # LEFT and RIGHT
@@ -50,14 +50,18 @@ class Snake:
 
     def events(self, event):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                self.state = LEFT
-            if event.key == pygame.K_RIGHT:
-                self.state = RIGHT
-            if event.key == pygame.K_UP:
-                self.state = UP
-            if event.key == pygame.K_DOWN:
-                self.state = DOWN
+            # if self.state == RIGHT:
+                if event.key == pygame.K_LEFT:
+                    self.state = LEFT
+            # if self.state == LEFT:
+                if event.key == pygame.K_RIGHT:
+                    self.state = RIGHT
+            # if self.state == DOWN:
+                if event.key == pygame.K_UP:
+                    self.state = UP
+            # if self.state == UP:
+                if event.key == pygame.K_DOWN:
+                    self.state = DOWN
 
     def render(self, screen):
         for link in self.links:
