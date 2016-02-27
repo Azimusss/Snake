@@ -2,7 +2,7 @@ import pygame, sys
 from pygame import *
 
 FPS = 10
-NORMAL, LEFT, RIGHT, UP, DOWN = 0, 1, 2, 3, 4
+NORMAL, LEFT, RIGHT, UP, DOWN, APPEND = 0, 1, 2, 3, 4, 5
 TILE_SIZE = 20
 window_width = 800
 window_height = 600
@@ -16,36 +16,10 @@ class Point:
 
 class Snake:
     def __init__(self, start_x=0, start_y=0):
+        self.old_state = 0
         self.state = NORMAL
-        self.speed = 20
-        self.links = []
+        self.links = [Point(2, 2), Point(2, 3), Point(2, 4), Point(2, 5), Point(2, 6), Point(2, 7)]
         self.links.append(Point(start_x, start_y))
-        self.links.append(Point(2, 3))
-        self.links.append(Point(2, 4))
-        self.links.append(Point(2, 5))
-        self.links.append(Point(2, 6))
-        self.links.append(Point(2, 7))
-        self.links.append(Point(2, 8))
-        self.links.append(Point(2, 9))
-        self.links.append(Point(2, 10))
-        self.links.append(Point(2, 11))
-        self.links.append(Point(2, 12))
-        self.links.append(Point(2, 13))
-        self.links.append(Point(2, 14))
-        self.links.append(Point(2, 15))
-        self.links.append(Point(2, 16))
-        self.links.append(Point(2, 17))
-        self.links.append(Point(2, 18))
-        self.links.append(Point(2, 19))
-        self.links.append(Point(2, 20))
-        self.links.append(Point(2, 21))
-        self.links.append(Point(2, 22))
-        self.links.append(Point(2, 23))
-        self.links.append(Point(2, 24))
-        self.links.append(Point(2, 25))
-        self.links.append(Point(2, 26))
-        self.links.append(Point(2, 27))
-        self.links.append(Point(2, 28))
         self.link_size = (TILE_SIZE, TILE_SIZE)
         self.link_img = pygame.Surface(self.link_size)
         self.draw_link()
@@ -56,7 +30,7 @@ class Snake:
         pygame.draw.rect(self.link_img, (0, 0, 200), ((0, 0), self.link_size))
         pygame.draw.rect(self.link_img, (255, 255, 255), ((0, 0), self.link_size), 1)
 
-    def update(self, dt):
+    def update(self):
         self.i += 1
         if self.i == 1:
             self.move()
@@ -66,6 +40,7 @@ class Snake:
             raise ValueError("Game Over")
         elif self.links[0].x * TILE_SIZE + TILE_SIZE > window_width:
             raise ValueError("Game Over")
+        # UP and DOWN
         if self.links[0].y < 0:
             raise ValueError("Game Over")
         elif self.links[0].y * TILE_SIZE + (TILE_SIZE * 2) > window_height:
@@ -86,11 +61,18 @@ class Snake:
                     if self.state != UP:
                         self.state = DOWN
                 if event.key == pygame.K_END:
-                        self.speed - 1
+                    self.old_state = self.state
+                    self.state = APPEND
+                if self.state == APPEND:
+                else:
+                    self.links.pop()
 
     def render(self, screen):
         for link in self.links:
             screen.blit(self.link_img, (link.x * self.link_size[0], link.y * self.link_size[1]))
+        font = pygame.font.SysFont("Courier New", 12)
+        text = font.render(str(len(self.links)), 2, (0, 250, 0))
+        screen.blit(text, (5, 5))
 
     def move(self):
         if self.state == RIGHT:
@@ -102,14 +84,11 @@ class Snake:
         if self.state == DOWN:
             self.links.insert(0, Point(self.links[0].x, self.links[0].y + 1))
         if not self.state == NORMAL:
-            self.links.pop()
-
-    def debug(self):
-        print(self.links)
-        print(self.links[0].x)
-        print(self.links[0].y)
+            pass
+            # self.links.pop()
 
 
+pygame.font.init()
 snake = Snake(2, 2)
 game_screen = pygame.Surface((window_width, window_height - TILE_SIZE))
 # pygame.draw.rect(game_screen, (0, 200, 0), game_screen.get_rect(), 2)       # рамка вокруг Surface'а
@@ -132,7 +111,7 @@ while not done:  # главный цикл программы
     screen.fill((10, 20, 30))
     game_screen.fill((10, 20, 30))
     try:
-        snake.update(0)
+        snake.update()
     except ValueError:
         print("You Lose")
         sys.exit()
@@ -140,4 +119,3 @@ while not done:  # главный цикл программы
     pygame.draw.line(game_screen, (0, 255, 0), (0, 0), (window_width, 0))
     display.blit(game_screen, (0, TILE_SIZE))
     pygame.display.flip()
-    print(snake.field_size)
