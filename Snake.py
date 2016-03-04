@@ -13,6 +13,8 @@ class Point:
         self.x = x
         self.y = y
 
+    # def
+
 
 class Snake:
     def __init__(self, start_x=0, start_y=0):
@@ -45,27 +47,26 @@ class Snake:
             raise ValueError("Game Over")
         elif self.links[0].y * TILE_SIZE + (TILE_SIZE * 2) > window_height:
             raise ValueError("Game Over")
+        # COLLIDE SELF
+        for el in self.links:
+
 
     def events(self, event):
         if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    if self.state != RIGHT:
-                        self.state = LEFT
-                if event.key == pygame.K_RIGHT:
-                    if self.state != LEFT:
-                        self.state = RIGHT
-                if event.key == pygame.K_UP:
-                    if self.state != DOWN:
-                        self.state = UP
-                if event.key == pygame.K_DOWN:
-                    if self.state != UP:
-                        self.state = DOWN
-                if event.key == pygame.K_END:
-                    self.old_state = self.state
-                    self.state = APPEND
-                if self.state == APPEND:
-                else:
-                    self.links.pop()
+            if event.key == pygame.K_LEFT:
+                if self.state != RIGHT:
+                    self.state = LEFT
+            if event.key == pygame.K_RIGHT:
+                if self.state != LEFT:
+                    self.state = RIGHT
+            if event.key == pygame.K_UP:
+                if self.state != DOWN:
+                    self.state = UP
+            if event.key == pygame.K_DOWN:
+                if self.state != UP:
+                    self.state = DOWN
+            if event.key == pygame.K_END:
+                self.links.append(Point(*self._next()))
 
     def render(self, screen):
         for link in self.links:
@@ -77,16 +78,31 @@ class Snake:
     def move(self):
         if self.state == RIGHT:
             self.links.insert(0, Point(self.links[0].x + 1, self.links[0].y))
+            self.links.pop()
         if self.state == LEFT:
             self.links.insert(0, Point(self.links[0].x - 1, self.links[0].y))
+            self.links.pop()
         if self.state == UP:
             self.links.insert(0, Point(self.links[0].x, self.links[0].y - 1))
+            self.links.pop()
         if self.state == DOWN:
             self.links.insert(0, Point(self.links[0].x, self.links[0].y + 1))
-        if not self.state == NORMAL:
-            pass
-            # self.links.pop()
+            self.links.pop()
 
+    def _next(self):
+        if self.links[len(self.links) - 1].x == self.links[len(self.links) - 2].x:
+            x = self.links[len(self.links) - 1].x
+            if self.links[len(self.links) - 2].y < self.links[len(self.links) - 1].y:
+                y = self.links[len(self.links) - 1].y + 1
+            else:
+                y = self.links[len(self.links) - 1].y - 1
+        if self.links[len(self.links) - 1].y == self.links[len(self.links) - 2].y:
+            y = self.links[len(self.links) - 1].y
+            if self.links[len(self.links) - 2].x < self.links[len(self.links) - 1].x:
+                x = self.links[len(self.links) - 1].x + 1
+            else:
+                x = self.links[len(self.links) - 1].x - 1
+        return x, y
 
 pygame.font.init()
 snake = Snake(2, 2)
