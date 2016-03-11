@@ -25,14 +25,15 @@ class Snake:
         # self.old_state = 0
         self.state = NORMAL
         self.links = [Point(start_x, start_y), Point(start_x, start_y + 1),
-                      Point(start_x, start_y + 2), Point(start_x, start_y + 3), ]
-        # self.food = [Point(10, 10)]
+                      Point(start_x, start_y + 2), Point(start_x, start_y + 3)]
+        self.food = Point(10, 10)
         self.link_size = (TILE_SIZE, TILE_SIZE)
         self.link_img = pygame.Surface(self.link_size)
-        # self.i = 0
+        self.i = 0
         self.field_size = Point(int(window_width / TILE_SIZE), int(window_height / TILE_SIZE))
 
         self.draw_link()
+        self.eat()
 
     def draw_link(self):
         pygame.draw.rect(self.link_img, (0, 0, 200), ((0, 0), self.link_size))
@@ -75,17 +76,18 @@ class Snake:
                 if self.state != UP:
                     self.state = DOWN
             if event.key == pygame.K_END:
-                self.links.append(Point(*self._next()))        # Добавление клетки
+                self.links.append(Point(*self.longer()))        # Добавление клетки
             if event.key == pygame.K_HOME:
                 self.create_food()
             if event.key == pygame.K_DELETE:
                 time.wait(1000)
+            if event.key == pygame.K_INSERT:
+                print(snake.links)
 
     def render(self, screen):
         for link in self.links:      # Отрисовка змея горыныча
             screen.blit(self.link_img, (link.x * self.link_size[0], link.y * self.link_size[1]))
-        for food in self.food:       # Отрисовка хавчика
-            screen.blit(self.link_img, (food.x * self.link_size[0], food.y * self.link_size[1]))
+            screen.blit(self.link_img, (self.food.x * self.link_size[0], self.food.y * self.link_size[1]))
         font = pygame.font.SysFont("Courier New", 12)
         text = font.render(str(len(self.links)), 2, (0, 250, 0))
         screen.blit(text, (5, 5))
@@ -104,7 +106,7 @@ class Snake:
             self.links.insert(0, Point(self.links[0].x, self.links[0].y + 1))
             self.links.pop()
 
-    def _next(self):
+    def longer(self):
         if self.links[len(self.links) - 1].x == self.links[len(self.links) - 2].x:
             x = self.links[len(self.links) - 1].x
             if self.links[len(self.links) - 2].y < self.links[len(self.links) - 1].y:
@@ -126,11 +128,14 @@ class Snake:
         b = random.randint(0, height)
         point = Point(a, b)
         if point not in self.links:
-            print("lol")
+            print("Хавчик!!!")
+            self.food = point
 
-
-class Food():
-    pass
+    def eat(self):
+        if self.food == self.links[len(self.links) - 1]:
+            snake.create_food()
+            snake.longer()
+            print("Потрачено!!!")
 
 pygame.font.init()
 snake = Snake(4, 4)
@@ -163,4 +168,3 @@ while not done:  # главный цикл программы
     pygame.draw.line(game_screen, (0, 255, 0), (0, 0), (window_width, 0))
     display.blit(game_screen, (0, TILE_SIZE))
     pygame.display.flip()
-    print(snake.links)
