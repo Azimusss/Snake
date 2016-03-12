@@ -4,8 +4,8 @@ from pygame import *
 FPS = 10
 NORMAL, LEFT, RIGHT, UP, DOWN, APPEND = 0, 1, 2, 3, 4, 5
 TILE_SIZE = 20
-window_width = 800
-window_height = 600
+window_width = 400
+window_height = 400
 
 
 class Point:
@@ -33,11 +33,8 @@ class Snake:
         self.field_size = Point(int(window_width / TILE_SIZE), int(window_height / TILE_SIZE))
 
         self.draw_link()
-        self.eat()
 
     def draw_link(self):
-        pygame.draw.rect(self.link_img, (0, 0, 200), ((0, 0), self.link_size))
-        pygame.draw.rect(self.link_img, (255, 255, 255), ((0, 0), self.link_size), 1)
         pygame.draw.rect(self.link_img, (0, 0, 200), ((0, 0), self.link_size))
         pygame.draw.rect(self.link_img, (255, 255, 255), ((0, 0), self.link_size), 1)
 
@@ -60,6 +57,7 @@ class Snake:
         if len([el for el in self.links if self.links.count(el) > 1]) > 1:
             print([el for el in self.links if self.links.count(el) > 1])
             raise ValueError("Game Over")
+        self.eat()
 
     def events(self, event):
         if event.type == pygame.KEYDOWN:
@@ -76,7 +74,7 @@ class Snake:
                 if self.state != UP:
                     self.state = DOWN
             if event.key == pygame.K_END:
-                self.links.append(Point(*self.longer()))        # Добавление клетки
+                self.links.append(Point(*self.longer()))  # Добавление клетки
             if event.key == pygame.K_HOME:
                 self.create_food()
             if event.key == pygame.K_DELETE:
@@ -85,11 +83,12 @@ class Snake:
                 print(snake.links)
 
     def render(self, screen):
-        for link in self.links:      # Отрисовка змея горыныча
+        for link in self.links:  # Отрисовка змея горыныча
             screen.blit(self.link_img, (link.x * self.link_size[0], link.y * self.link_size[1]))
             screen.blit(self.link_img, (self.food.x * self.link_size[0], self.food.y * self.link_size[1]))
         font = pygame.font.SysFont("Courier New", 12)
         text = font.render(str(len(self.links)), 2, (0, 250, 0))
+        pygame.draw.rect(screen, (255, 0, 0), ((0, TILE_SIZE), (window_width, window_height)), 1)
         screen.blit(text, (5, 5))
 
     def move(self):
@@ -119,6 +118,7 @@ class Snake:
                 x = self.links[len(self.links) - 1].x + 1
             else:
                 x = self.links[len(self.links) - 1].x - 1
+        self.links.append(Point(x, y))
         return x, y
 
     def create_food(self):
@@ -128,23 +128,26 @@ class Snake:
         b = random.randint(0, height)
         point = Point(a, b)
         if point not in self.links:
-            print("Хавчик!!!")
             self.food = point
+        else:
+            self.create_food()
 
     def eat(self):
-        if self.food == self.links[len(self.links) - 1]:
-            snake.create_food()
-            snake.longer()
-            print("Потрачено!!!")
+        if self.food == self.links[1]:
+            self.create_food()
+            self.longer()
+            print("(", self.food, ")")
+
 
 pygame.font.init()
 snake = Snake(4, 4)
-game_screen = pygame.Surface((window_width, window_height - TILE_SIZE))
+game_screen = pygame.Surface((window_width - TILE_SIZE, window_height - TILE_SIZE * 2))
 # pygame.draw.rect(game_screen, (0, 200, 0), game_screen.get_rect(), 2)       # рамка вокруг Surface'а
 display = pygame.display.set_mode((window_width, window_height))  # создание окна
 screen = pygame.display.get_surface()
 clock = pygame.time.Clock()
 
+print(window_height / TILE_SIZE, window_width / TILE_SIZE)
 done = False
 while not done:  # главный цикл программы
     for e in pygame.event.get():  # цикл обработки очереди событий окна
