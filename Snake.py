@@ -4,8 +4,10 @@ from pygame import *
 FPS = 10
 NORMAL, LEFT, RIGHT, UP, DOWN, APPEND = 0, 1, 2, 3, 4, 5
 TILE_SIZE = 20
-window_width = 400
-window_height = 400
+tile_wight = 40
+tile_height = 30
+field_width = tile_wight * TILE_SIZE
+field_height = tile_height * TILE_SIZE
 
 
 class Point:
@@ -22,15 +24,14 @@ class Point:
 
 class Snake:
     def __init__(self, start_x=0, start_y=0):
-        # self.old_state = 0
         self.state = NORMAL
         self.links = [Point(start_x, start_y), Point(start_x, start_y + 1),
                       Point(start_x, start_y + 2), Point(start_x, start_y + 3)]
-        self.food = Point(10, 10)
+        self.food = Point(-1, -1)
         self.link_size = (TILE_SIZE, TILE_SIZE)
         self.link_img = pygame.Surface(self.link_size)
         self.i = 0
-        self.field_size = Point(int(window_width / TILE_SIZE), int(window_height / TILE_SIZE))
+        self.field_size = Point(tile_wight, tile_height)
 
         self.draw_link()
 
@@ -46,12 +47,12 @@ class Snake:
         # LEFT and RIGHT
         if self.links[0].x < 0:
             raise ValueError("Game Over")
-        elif self.links[0].x * TILE_SIZE + TILE_SIZE > window_width:
+        elif self.links[0].x * TILE_SIZE + TILE_SIZE > field_width:
             raise ValueError("Game Over")
         # UP and DOWN
         if self.links[0].y < 0:
             raise ValueError("Game Over")
-        elif self.links[0].y * TILE_SIZE + (TILE_SIZE * 2) > window_height:
+        elif self.links[0].y * TILE_SIZE + (TILE_SIZE * 2) > field_height:
             raise ValueError("Game Over")
         # COLLIDE SELF
         if len([el for el in self.links if self.links.count(el) > 1]) > 1:
@@ -88,7 +89,8 @@ class Snake:
             screen.blit(self.link_img, (self.food.x * self.link_size[0], self.food.y * self.link_size[1]))
         font = pygame.font.SysFont("Courier New", 12)
         text = font.render(str(len(self.links)), 2, (0, 250, 0))
-        pygame.draw.rect(screen, (255, 0, 0), ((0, TILE_SIZE), (window_width, window_height)), 1)
+        # pygame.draw.rect(screen, (0, 0, 255), ((0, 1), (field_width, field_height)), 1)
+        # pygame.draw.rect(game_screen, (255, 0, 0), game_screen.get_rect(), 2)       # рамка вокруг Surface'а
         screen.blit(text, (5, 5))
 
     def move(self):
@@ -122,13 +124,12 @@ class Snake:
         return x, y
 
     def create_food(self):
-        wight = window_width / TILE_SIZE
-        height = window_height / TILE_SIZE
-        a = random.randint(0, wight)
-        b = random.randint(0, height)
+        a = random.randint(0, tile_wight - 1)
+        b = random.randint(0, tile_height - 2)
         point = Point(a, b)
         if point not in self.links:
             self.food = point
+            print("(", self.food, ")")
         else:
             self.create_food()
 
@@ -136,18 +137,16 @@ class Snake:
         if self.food == self.links[1]:
             self.create_food()
             self.longer()
-            print("(", self.food, ")")
 
 
 pygame.font.init()
 snake = Snake(4, 4)
-game_screen = pygame.Surface((window_width - TILE_SIZE, window_height - TILE_SIZE * 2))
-# pygame.draw.rect(game_screen, (0, 200, 0), game_screen.get_rect(), 2)       # рамка вокруг Surface'а
-display = pygame.display.set_mode((window_width, window_height))  # создание окна
+game_screen = pygame.Surface((field_width, field_height))
+display = pygame.display.set_mode((field_width, field_height))  # создание окна
 screen = pygame.display.get_surface()
 clock = pygame.time.Clock()
 
-print(window_height / TILE_SIZE, window_width / TILE_SIZE)
+print(field_height / TILE_SIZE, field_width / TILE_SIZE)
 done = False
 while not done:  # главный цикл программы
     for e in pygame.event.get():  # цикл обработки очереди событий окна
@@ -168,6 +167,6 @@ while not done:  # главный цикл программы
         print("You Lose")
         sys.exit()
     snake.render(game_screen)
-    pygame.draw.line(game_screen, (0, 255, 0), (0, 0), (window_width, 0))
+    pygame.draw.line(game_screen, (0, 255, 0), (0, 0), (field_width, 0))
     display.blit(game_screen, (0, TILE_SIZE))
     pygame.display.flip()
