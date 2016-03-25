@@ -1,25 +1,14 @@
 import pygame, sys, random
 from pygame import *
+from Classes.Point import Point
 
-FPS = 10
+
 NORMAL, LEFT, RIGHT, UP, DOWN, APPEND = 0, 1, 2, 3, 4, 5
 TILE_SIZE = 20
 tile_wight = 40
 tile_height = 30
 field_width = tile_wight * TILE_SIZE
 field_height = tile_height * TILE_SIZE
-
-
-class Point:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-    def __eq__(self, other):
-        return self.x == other.x and self.y == other.y
-
-    def __repr__(self):
-        return "Point {} {}".format(self.x, self.y)
 
 
 class Snake:
