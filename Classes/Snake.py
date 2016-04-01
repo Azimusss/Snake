@@ -4,6 +4,7 @@ from Classes.Point import Point
 
 
 NORMAL, LEFT, RIGHT, UP, DOWN, APPEND = 0, 1, 2, 3, 4, 5
+FPS = 15
 TILE_SIZE = 20
 tile_wight = 40
 tile_height = 30
