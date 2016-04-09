@@ -128,35 +128,35 @@ class Snake:
             self.create_food()
             self.longer()
 
+if __name__ == "__main__":
+    pygame.font.init()
+    snake = Snake(4, 4)
+    game_screen = pygame.Surface((field_width, field_height))
+    display = pygame.display.set_mode((field_width, field_height))  # создание окна
+    screen = pygame.display.get_surface()
+    clock = pygame.time.Clock()
 
-pygame.font.init()
-snake = Snake(4, 4)
-game_screen = pygame.Surface((field_width, field_height))
-display = pygame.display.set_mode((field_width, field_height))  # создание окна
-screen = pygame.display.get_surface()
-clock = pygame.time.Clock()
-
-print(field_height / TILE_SIZE, field_width / TILE_SIZE)
-done = False
-while not done:  # главный цикл программы
-    for e in pygame.event.get():  # цикл обработки очереди событий окна
-        if e.type == pygame.QUIT:
-            sys.exit()
-        if e.type == pygame.KEYDOWN:
-            if e.key == pygame.K_ESCAPE:
+    print(field_height / TILE_SIZE, field_width / TILE_SIZE)
+    done = False
+    while not done:  # главный цикл программы
+        for e in pygame.event.get():  # цикл обработки очереди событий окна
+            if e.type == pygame.QUIT:
                 sys.exit()
-        snake.events(e)
+            if e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_ESCAPE:
+                    sys.exit()
+            snake.events(e)
 
-    pygame.display.update()
-    clock.tick(FPS)
-    screen.fill((10, 20, 30))
-    game_screen.fill((10, 20, 30))
-    try:
-        snake.update()
-    except ValueError:
-        print("You Lose")
-        sys.exit()
-    snake.render(game_screen)
-    pygame.draw.line(game_screen, (0, 255, 0), (0, 0), (field_width, 0))
-    display.blit(game_screen, (0, TILE_SIZE))
-    pygame.display.flip()
+        pygame.display.update()
+        clock.tick(FPS)
+        screen.fill((10, 20, 30))
+        game_screen.fill((10, 20, 30))
+        try:
+            snake.update()
+        except ValueError:
+            print("You Lose")
+            sys.exit()
+        snake.render(game_screen)
+        pygame.draw.line(game_screen, (0, 255, 0), (0, 0), (field_width, 0))
+        display.blit(game_screen, (0, TILE_SIZE))
+        pygame.display.flip()

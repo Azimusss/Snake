@@ -75,6 +75,7 @@ class Button:  # основная кнопка
                 self.change_image('over')
 
         if event.type == pygame.MOUSEMOTION:
+            # print(self.check_mouse_coords(event.pos))
             if self.check_mouse_coords(event.pos):  # если курсор на картинке, смена картинки
                 self.change_image('over')  # метод смены картинки
             elif not self.check_mouse_coords(event.pos):
