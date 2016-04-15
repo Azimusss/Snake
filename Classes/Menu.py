@@ -33,7 +33,7 @@ class Menu:
         self.start_b.event(event)
         self.setting_b.event(event)
         self.top_records_b.event(event)
-        self.exit_b.event(event)
+        self.exit_b.event(event)                    #GG
 
     def render(self, screen):
         self.start_b.render(screen)
