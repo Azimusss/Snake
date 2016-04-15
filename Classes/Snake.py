@@ -2,7 +2,6 @@ import pygame, sys, random
 from pygame import *
 from Classes.Point import Point
 
-
 NORMAL, LEFT, RIGHT, UP, DOWN, APPEND = 0, 1, 2, 3, 4, 5
 FPS = 15
 TILE_SIZE = 20
@@ -13,8 +12,9 @@ field_height = tile_height * TILE_SIZE
 
 
 class Snake:
-    def __init__(self, start_x=0, start_y=0):
+    def __init__(self, start_x=0, start_y=0, color=(100, 150, 200)):
         self.state = NORMAL
+        self.color = color
         self.links = [Point(start_x, start_y), Point(start_x, start_y + 1),
                       Point(start_x, start_y + 2), Point(start_x, start_y + 3)]
         self.food = Point(-1, -1)
@@ -26,7 +26,7 @@ class Snake:
         self.draw_link()
 
     def draw_link(self):
-        pygame.draw.rect(self.link_img, (0, 0, 200), ((0, 0), self.link_size))
+        pygame.draw.rect(self.link_img, self.color, ((0, 0), self.link_size))
         pygame.draw.rect(self.link_img, (255, 255, 255), ((0, 0), self.link_size), 1)
 
     def update(self):
@@ -119,7 +119,6 @@ class Snake:
         point = Point(a, b)
         if point not in self.links:
             self.food = point
-            print("(", self.food, ")")
         else:
             self.create_food()
 
@@ -128,35 +127,35 @@ class Snake:
             self.create_food()
             self.longer()
 
-if __name__ == "__main__":
-    pygame.font.init()
-    snake = Snake(4, 4)
-    game_screen = pygame.Surface((field_width, field_height))
-    display = pygame.display.set_mode((field_width, field_height))  # создание окна
-    screen = pygame.display.get_surface()
-    clock = pygame.time.Clock()
-
-    print(field_height / TILE_SIZE, field_width / TILE_SIZE)
-    done = False
-    while not done:  # главный цикл программы
-        for e in pygame.event.get():  # цикл обработки очереди событий окна
-            if e.type == pygame.QUIT:
-                sys.exit()
-            if e.type == pygame.KEYDOWN:
-                if e.key == pygame.K_ESCAPE:
+    def run(self):
+        done = False
+        while not done:  # главный цикл программы
+            for e in pygame.event.get():  # цикл обработки очереди событий окна
+                if e.type == pygame.QUIT:
                     sys.exit()
-            snake.events(e)
+                if e.type == pygame.KEYDOWN:
+                    if e.key == pygame.K_ESCAPE:
+                        sys.exit()
+                snake.events(e)
+            pygame.display.update()
+            clock.tick(FPS)
+            screen.fill((10, 20, 30))
+            game_screen.fill((10, 20, 30))
+            try:
+                snake.update()
+            except ValueError:
+                print("You Lose")
+                print("You Highscore :", len(snake.links))
+                sys.exit()
+            snake.render(game_screen)
+            pygame.draw.line(game_screen, (0, 255, 0), (0, 0), (field_width, 0))
+            display.blit(game_screen, (0, TILE_SIZE))
+            pygame.display.flip()
 
-        pygame.display.update()
-        clock.tick(FPS)
-        screen.fill((10, 20, 30))
-        game_screen.fill((10, 20, 30))
-        try:
-            snake.update()
-        except ValueError:
-            print("You Lose")
-            sys.exit()
-        snake.render(game_screen)
-        pygame.draw.line(game_screen, (0, 255, 0), (0, 0), (field_width, 0))
-        display.blit(game_screen, (0, TILE_SIZE))
-        pygame.display.flip()
+pygame.font.init()
+snake = Snake(4, 4)
+game_screen = pygame.Surface((field_width, field_height))
+display = pygame.display.set_mode((field_width, field_height))  # создание окна
+screen = pygame.display.get_surface()
+clock = pygame.time.Clock()
+
