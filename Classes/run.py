@@ -24,18 +24,19 @@ class Run:
         screen = pygame.display.get_surface()
         clock = pygame.time.Clock()
         mn = Menu()
-        mn.run_menu()
+        mn.run()
 
     def run_snake(self):
         self.app_state = 'snake'
         self.done = False
-        pygame.font.init()
         game_screen = pygame.Surface((field_width, field_height))
         display = pygame.display.set_mode((field_width, field_height))  # создание окна
         screen = pygame.display.get_surface()
         clock = pygame.time.Clock()
-        snake = Snake(4, 4)
-        snake.run()
+        snake = Snake((4, 4), (0, 0, 0), (255, 255, 255),
+                  (pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s),
+                  4, 4, menu=None)
+        snake.run_snake()
 
     def run_record_table(self):
         self.app_state = 'top_records'

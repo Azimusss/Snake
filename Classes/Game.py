@@ -32,6 +32,8 @@ class Game:
             pygame.font.quit()
 
 
-if __name__ == "__main__":
-    game = Game()
-    game.run()
+# if __name__ == "__main__":
+#     game = Game()
+#     game.run()
+game = Game()
+game.run()

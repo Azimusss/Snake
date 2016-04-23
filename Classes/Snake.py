@@ -5,29 +5,38 @@ from Classes.Point import Point
 NORMAL, LEFT, RIGHT, UP, DOWN, APPEND = 0, 1, 2, 3, 4, 5
 FPS = 15
 TILE_SIZE = 20
-tile_wight = 40
-tile_height = 30
+tile_wight = 50
+tile_height = 35
 field_width = tile_wight * TILE_SIZE
 field_height = tile_height * TILE_SIZE
 
 
 class Snake:
-    def __init__(self, start_x=0, start_y=0, color=(100, 150, 200)):
+    def __init__(self, pos_text, color, color_rect ,keys ,start_x=0, start_y=0, menu=None):
+        self.k_left = keys[0]
+        self.k_right = keys[1]
+        self.k_up = keys[2]
+        self.k_down = keys[3]
         self.state = NORMAL
         self.color = color
+        self.pos_text = pos_text
+        self.color_rect = color_rect
         self.links = [Point(start_x, start_y), Point(start_x, start_y + 1),
                       Point(start_x, start_y + 2), Point(start_x, start_y + 3)]
+        self.menu = menu
         self.food = Point(-1, -1)
         self.link_size = (TILE_SIZE, TILE_SIZE)
         self.link_img = pygame.Surface(self.link_size)
         self.i = 0
         self.field_size = Point(tile_wight, tile_height)
+        self.done = False
 
         self.draw_link()
+        self.create_food()
 
     def draw_link(self):
         pygame.draw.rect(self.link_img, self.color, ((0, 0), self.link_size))
-        pygame.draw.rect(self.link_img, (255, 255, 255), ((0, 0), self.link_size), 1)
+        pygame.draw.rect(self.link_img, self.color_rect, ((0, 0), self.link_size), 1)
 
     def update(self):
         self.i += 1
@@ -52,16 +61,16 @@ class Snake:
 
     def events(self, event):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
+            if event.key == self.k_left:
                 if self.state != RIGHT:
                     self.state = LEFT
-            if event.key == pygame.K_RIGHT:
+            if event.key == self.k_right:
                 if self.state != LEFT:
                     self.state = RIGHT
-            if event.key == pygame.K_UP:
+            if event.key == self.k_up:
                 if self.state != DOWN:
                     self.state = UP
-            if event.key == pygame.K_DOWN:
+            if event.key == self.k_down:
                 if self.state != UP:
                     self.state = DOWN
             if event.key == pygame.K_END:
@@ -81,7 +90,7 @@ class Snake:
         text = font.render(str(len(self.links)), 2, (0, 250, 0))
         # pygame.draw.rect(screen, (0, 0, 255), ((0, 1), (field_width, field_height)), 1)
         # pygame.draw.rect(game_screen, (255, 0, 0), game_screen.get_rect(), 2)       # рамка вокруг Surface'а
-        screen.blit(text, (5, 5))
+        screen.blit(text, self.pos_text)
 
     def move(self):
         if self.state == RIGHT:
@@ -119,6 +128,7 @@ class Snake:
         point = Point(a, b)
         if point not in self.links:
             self.food = point
+            print("(", self.food, ")")
         else:
             self.create_food()
 
@@ -127,35 +137,80 @@ class Snake:
             self.create_food()
             self.longer()
 
-    def run(self):
-        done = False
-        while not done:  # главный цикл программы
+    def game_over(self):
+        from Classes.Menu import Menu
+        self.done = True
+        menu = Menu()
+        menu.run()
+
+    def run_snake(self):
+        game_screen = pygame.Surface((field_width, field_height))
+        display = pygame.display.set_mode((field_width, field_height))  # создание окна
+        screen = pygame.display.get_surface()
+        clock = pygame.time.Clock()
+        while not self.done:  # главный цикл программы
             for e in pygame.event.get():  # цикл обработки очереди событий окна
                 if e.type == pygame.QUIT:
                     sys.exit()
                 if e.type == pygame.KEYDOWN:
                     if e.key == pygame.K_ESCAPE:
                         sys.exit()
-                snake.events(e)
+                self.events(e)
+
             pygame.display.update()
             clock.tick(FPS)
             screen.fill((10, 20, 30))
             game_screen.fill((10, 20, 30))
             try:
-                snake.update()
+                self.update()
             except ValueError:
                 print("You Lose")
-                print("You Highscore :", len(snake.links))
-                sys.exit()
-            snake.render(game_screen)
+                self.game_over()
+                # sys.exit()
+            self.render(game_screen)
             pygame.draw.line(game_screen, (0, 255, 0), (0, 0), (field_width, 0))
             display.blit(game_screen, (0, TILE_SIZE))
             pygame.display.flip()
+            self.color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
-pygame.font.init()
-snake = Snake(4, 4)
-game_screen = pygame.Surface((field_width, field_height))
-display = pygame.display.set_mode((field_width, field_height))  # создание окна
-screen = pygame.display.get_surface()
-clock = pygame.time.Clock()
+if __name__ == "__main__":
+    pygame.font.init()
+    snake = Snake((4, 4), (0, 0, 0), (255, 255, 255),
+                  (pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s),
+                  4, 4, menu=None)
+    snake1 = Snake((983, 4), (255, 255, 255), (0, 0, 0),
+                   (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN),
+                   46, 4, menu=None)
+    game_screen = pygame.Surface((field_width, field_height))
+    display = pygame.display.set_mode((field_width, field_height))  # создание окна
+    pygame.display.set_caption('Snake')
+    screen = pygame.display.get_surface()
+    clock = pygame.time.Clock()
 
+    print(field_height / TILE_SIZE, field_width / TILE_SIZE)
+    done = False
+    while not done:  # главный цикл программы
+        for e in pygame.event.get():  # цикл обработки очереди событий окна
+            if e.type == pygame.QUIT:
+                sys.exit()
+            if e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_ESCAPE:
+                    sys.exit()
+            snake.events(e)
+            snake1.events(e)
+
+        pygame.display.update()
+        clock.tick(FPS)
+        screen.fill((10, 20, 30))
+        game_screen.fill((10, 20, 30))
+        try:
+            snake.update()
+            snake1.update()
+        except ValueError:
+            print("You Lose")
+            sys.exit()
+        snake.render(game_screen)
+        snake1.render(game_screen)
+        pygame.draw.line(game_screen, (0, 255, 0), (0, 0), (field_width, 0))
+        display.blit(game_screen, (0, TILE_SIZE))
+        pygame.display.flip()

@@ -22,6 +22,7 @@ w,h - ширина и высота кнопки. Если не заданы, р�
 class Button:  # основная кнопка
     def __init__(self, image_names, path='../images/Buttons', pos=(0, 0), function=None, parent=None, text='Simple Button',
                  w=0, h=0):
+        pygame.font.init()
         self.image_normal = load_image(image_names[0], alpha_channel=True,
                                        dir_name=path)  # изображение кнопки в базовом состоянии
         self.image_on_over = load_image(image_names[1], alpha_channel=True,
@@ -133,7 +134,7 @@ def hello_world():
 
 if __name__ == "__main__":
     pygame.init()
-
+    pygame.font.init()
     screen = pygame.display.set_mode((640, 480))
     render_list = []
     # Создаем кнопку
