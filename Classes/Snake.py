@@ -171,7 +171,6 @@ class Snake:
             pygame.draw.line(game_screen, (0, 255, 0), (0, 0), (field_width, 0))
             display.blit(game_screen, (0, TILE_SIZE))
             pygame.display.flip()
-            self.color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
 if __name__ == "__main__":
     pygame.font.init()

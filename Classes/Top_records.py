@@ -8,28 +8,48 @@ win_heigh = 700
 DIR = '..'
 
 
-def form(name, score):
-    sym = 30 - len(name)
-    return name, ' '*sym, score
+class Text:
+    """
+    :param text
+    :param text image
+    """
+    def __init__(self, text, screen, pos, color=(0, 255, 0), font_size=12):
+        self.font = pygame.font.SysFont("Courier New", 12)
+        self.text = self.font.render(str(text), 2, (0, 250, 0))
+        self.screen = screen
+        self.pos = pos
+        self.color = color
+        self.font_size = font_size
 
+    def render(self):
+        """
+        Возвращает картинку с текстом
+        """
+        self.font.render(str(self.text), True, self.color)
+        self.screen.blit(self.text, self.pos)
 
 class Top_records:
+    """
+    Занимается загрузкой файла и отображает загруженную информацию
+    """
     def __init__(self):
-        self.students_data = json.load(open(os.path.join(DIR, 'Top_Records.json'), 'r'))
         self.done = True
-        self.lst = []
+        self.top = json.load(open(os.path.join(DIR, 'Top_Records.json'), 'r'))
+
+    def form(self, name, score):
+        sym = 30 - len(name)
+        return name, ' '*sym, score
 
     def events(self, event):
         pass
 
     def render(self, screen):
-        pass
-
-    def read(self):
-        top = json.load(open(os.path.join(DIR, 'Top_Records.json'), 'r'))
-
-        for player in top:
-            print('%s %s %s' % (form(player['name'], player['score'])))
+        l = 40
+        for text in self.top:
+            print(text)
+            text = Text(text, screen, (400, l))
+            text.render()
+            l += 30
 
     def run(self):
         pygame.init()
@@ -53,3 +73,4 @@ class Top_records:
 
 rec = Top_records()
 rec.run()
+rec.render()
