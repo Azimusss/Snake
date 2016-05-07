@@ -2,10 +2,10 @@ import pygame
 import sys
 import os
 import json
+import settings
 
 win_weigh = 1000
 win_heigh = 700
-DIR = '..'
 
 
 class Text:
@@ -13,8 +13,8 @@ class Text:
     :param text
     :param text image
     """
-    def __init__(self, text, screen, pos, color=(0, 255, 0), font_size=12):
-        self.font = pygame.font.SysFont("Courier New", 12)
+    def __init__(self, text, screen, pos, color=(0, 255, 0), font_size=20):
+        self.font = pygame.font.SysFont("Courier New", font_size)
         self.text = self.font.render(str(text), 2, (0, 250, 0))
         self.screen = screen
         self.pos = pos
@@ -28,28 +28,30 @@ class Text:
         self.font.render(str(self.text), True, self.color)
         self.screen.blit(self.text, self.pos)
 
-class Top_records:
+
+class Top:
     """
     Занимается загрузкой файла и отображает загруженную информацию
     """
     def __init__(self):
         self.done = True
-        self.top = json.load(open(os.path.join(DIR, 'Top_Records.json'), 'r'))
-
-    def form(self, name, score):
-        sym = 30 - len(name)
-        return name, ' '*sym, score
+        with open(os.path.join(settings.DATA_DIR, 'Top_Records.json')) as f:
+            self.top = json.load(f)
 
     def events(self, event):
         pass
 
     def render(self, screen):
-        l = 40
+        l = 160
         for text in self.top:
-            print(text)
-            text = Text(text, screen, (400, l))
+            text = Text(text['name'], screen, (360, l), font_size=16)
             text.render()
             l += 30
+        h = 160
+        for text in self.top:
+            text = Text(text['score'], screen, (590, h), font_size=16)
+            text.render()
+            h += 30
 
     def run(self):
         pygame.init()
@@ -71,6 +73,6 @@ class Top_records:
             self.render(screen)
             pygame.display.flip()
 
-rec = Top_records()
+rec = Top()
 rec.run()
 rec.render()

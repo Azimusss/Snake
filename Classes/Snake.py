@@ -1,5 +1,6 @@
-import pygame, sys, random
+import pygame, sys, random, json, os
 from pygame import *
+import settings
 from Classes.Point import Point
 
 NORMAL, LEFT, RIGHT, UP, DOWN, APPEND = 0, 1, 2, 3, 4, 5
@@ -12,7 +13,7 @@ field_height = tile_height * TILE_SIZE
 
 
 class Snake:
-    def __init__(self, pos_text, color, color_rect ,keys ,start_x=0, start_y=0, menu=None):
+    def __init__(self, pos_text, color, color_rect, keys, start_x=0, start_y=0, menu=None):
         self.k_left = keys[0]
         self.k_right = keys[1]
         self.k_up = keys[2]
@@ -29,10 +30,13 @@ class Snake:
         self.link_img = pygame.Surface(self.link_size)
         self.i = 0
         self.field_size = Point(tile_wight, tile_height)
+        with open(os.path.join(settings.DATA_DIR, 'Top_Records.json')) as f:
+            self.top = json.load(f)
         self.done = False
 
         self.draw_link()
         self.create_food()
+        self.counter_top()
 
     def draw_link(self):
         pygame.draw.rect(self.link_img, self.color, ((0, 0), self.link_size))
@@ -142,6 +146,10 @@ class Snake:
         self.done = True
         menu = Menu()
         menu.run()
+
+    def counter_top(self):
+        if len(self.top) > 9:
+            rd_top = self.top[0:9]
 
     def run_snake(self):
         game_screen = pygame.Surface((field_width, field_height))
