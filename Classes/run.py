@@ -66,9 +66,11 @@ class Run:
         if self.app_state == 'top_records':
             self.records.render(screen)
 
-game_screen = pygame.Surface((field_width, field_height))
-display = pygame.display.set_mode((field_width, field_height))  # создание окна
-screen = pygame.display.get_surface()
-clock = pygame.time.Clock()
+    def run(self):
+        game_screen = pygame.Surface((field_width, field_height))
+        display = pygame.display.set_mode((field_width, field_height))  # создание окна
+        screen = pygame.display.get_surface()
+        clock = pygame.time.Clock()
+
 run = Run()
 run.run_menu()
