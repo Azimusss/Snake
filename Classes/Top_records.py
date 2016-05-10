@@ -3,9 +3,16 @@ import sys
 import os
 import json
 import settings
+from utilities import *
 
 win_weigh = 1000
 win_heigh = 700
+FPS = 30
+TILE_SIZE = 20
+tile_wight = 40
+tile_height = 30
+field_width = tile_wight * TILE_SIZE
+field_height = tile_height * TILE_SIZE
 
 
 class Text:
@@ -53,6 +60,17 @@ class Top:
             text.render()
             h += 30
 
+    def start_menu(self):
+        from Classes.Menu import Menu
+        pygame.font.init()
+        game_screen = pygame.Surface((win_weigh, win_heigh))
+        display = pygame.display.set_mode((win_weigh, win_heigh))  # создание окна
+        screen = pygame.display.get_surface()
+        clock = pygame.time.Clock()
+        mn = Menu()
+        mn.run()
+
+
     def run(self):
         pygame.init()
         pygame.font.init()
@@ -66,13 +84,14 @@ class Top:
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        sys.exit()
+                        self.start_menu()
                 self.events(event)
             pygame.display.update()
             screen.fill((10, 20, 30))
             self.render(screen)
             pygame.display.flip()
 
-rec = Top()
-rec.run()
-rec.render()
+
+if __name__ == '__main__':
+    rec = Top()
+    rec.run()

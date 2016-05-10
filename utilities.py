@@ -8,6 +8,17 @@ location = lambda x: os.path.join(
     os.path.dirname(os.path.realpath(__file__)), x)
 
 
+def max_top(top_l):
+    lst = []
+    for text in top_l:
+        lst.append(text['score'])
+    return max(lst)
+
+
+def index(list, el):
+    return print(list.index(el))
+
+
 def save(data, file_name):
     file = open(os.path.join(DIR, file_name), 'w', encoding="UTF-8")
     file.write(json.dumps(data, ensure_ascii=False))

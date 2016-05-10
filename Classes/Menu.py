@@ -2,6 +2,8 @@ import pygame, sys, os
 from pygame import *
 from Classes.Button import Button
 from Classes.Snake import Snake
+from Classes.Top_records import *
+
 FPS = 30
 win_weight, win_height = 1000, 700
 TILE_SIZE = 20
@@ -17,7 +19,7 @@ class Menu:
         self.start_b = Button(('button_on.png', 'button_hover.png', 'button_click.png'),
                               path='../images/Buttons', pos=(410, 224), text='Start', function=self.start_game)
         self.top_b = Button(('button_on.png', 'button_hover.png', 'button_click.png'),
-                              path='../images/Buttons', pos=(410, 287), text='Top Records', function=None)
+                              path='../images/Buttons', pos=(410, 287), text='Top Records', function=self.start_top)
         self.setting_b = Button(('button_on.png', 'button_hover.png', 'button_click.png'),
                               path='../images/Buttons', pos=(410, 350), text='Setting', function=None)
         self.exit_b = Button(('button_on.png', 'button_hover.png', 'button_click.png'),
@@ -46,8 +48,12 @@ class Menu:
         pygame.font.init()
         snake = Snake((4, 4), (0, 0, 0), (255, 255, 255),
                   (pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s),
-                  4, 4, menu=None)
+                  4, 4, menu=Menu())
         snake.run_snake()
+
+    def start_top(self):
+        top = Top()
+        top.run()
 
     def run(self):
         pygame.init()

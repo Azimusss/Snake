@@ -2,6 +2,8 @@ import pygame, sys, random, json, os
 from pygame import *
 import settings
 from Classes.Point import Point
+from utilities import *
+from Classes.TextBox import *
 
 NORMAL, LEFT, RIGHT, UP, DOWN, APPEND = 0, 1, 2, 3, 4, 5
 FPS = 15
@@ -36,7 +38,6 @@ class Snake:
 
         self.draw_link()
         self.create_food()
-        self.counter_top()
 
     def draw_link(self):
         pygame.draw.rect(self.link_img, self.color, ((0, 0), self.link_size))
@@ -49,18 +50,18 @@ class Snake:
             self.i = 0
         # LEFT and RIGHT
         if self.links[0].x < 0:
-            raise ValueError("Game Over")
+            self.new_record_test()
         elif self.links[0].x * TILE_SIZE + TILE_SIZE > field_width:
-            raise ValueError("Game Over")
+            self.new_record_test()
         # UP and DOWN
         if self.links[0].y < 0:
-            raise ValueError("Game Over")
+            self.new_record_test()
         elif self.links[0].y * TILE_SIZE + (TILE_SIZE * 2) > field_height:
-            raise ValueError("Game Over")
+            self.new_record_test()
         # COLLIDE SELF
         if len([el for el in self.links if self.links.count(el) > 1]) > 1:
             print([el for el in self.links if self.links.count(el) > 1])
-            raise ValueError("Game Over")
+            self.new_record_test()
         self.eat()
 
     def events(self, event):
@@ -132,7 +133,6 @@ class Snake:
         point = Point(a, b)
         if point not in self.links:
             self.food = point
-            print("(", self.food, ")")
         else:
             self.create_food()
 
@@ -147,9 +147,18 @@ class Snake:
         menu = Menu()
         menu.run()
 
-    def counter_top(self):
-        if len(self.top) > 9:
-            rd_top = self.top[0:9]
+    def new_record_test(self):
+        if max_top(self.top) < len(self.links):
+            print('You Lose')
+            name = main()
+            self.top.append({"name": str(name), "score": len(self.links)})
+            self.top = sorted(self.top, key=lambda x: x["score"], reverse=True)[:9]
+            save(self.top, 'C:\PycharmProjects\Snake\data\Top_Records.json')
+            print("saved")
+            self.game_over()
+        else:
+            print('You Lose')
+            self.game_over()
 
     def run_snake(self):
         game_screen = pygame.Surface((field_width, field_height))
@@ -185,16 +194,12 @@ if __name__ == "__main__":
     snake = Snake((4, 4), (0, 0, 0), (255, 255, 255),
                   (pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s),
                   4, 4, menu=None)
-    snake1 = Snake((983, 4), (255, 255, 255), (0, 0, 0),
-                   (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN),
-                   46, 4, menu=None)
     game_screen = pygame.Surface((field_width, field_height))
     display = pygame.display.set_mode((field_width, field_height))  # создание окна
     pygame.display.set_caption('Snake')
     screen = pygame.display.get_surface()
     clock = pygame.time.Clock()
 
-    print(field_height / TILE_SIZE, field_width / TILE_SIZE)
     done = False
     while not done:  # главный цикл программы
         for e in pygame.event.get():  # цикл обработки очереди событий окна
@@ -204,7 +209,6 @@ if __name__ == "__main__":
                 if e.key == pygame.K_ESCAPE:
                     sys.exit()
             snake.events(e)
-            snake1.events(e)
 
         pygame.display.update()
         clock.tick(FPS)
@@ -212,12 +216,10 @@ if __name__ == "__main__":
         game_screen.fill((10, 20, 30))
         try:
             snake.update()
-            snake1.update()
         except ValueError:
             print("You Lose")
             sys.exit()
         snake.render(game_screen)
-        snake1.render(game_screen)
         pygame.draw.line(game_screen, (0, 255, 0), (0, 0), (field_width, 0))
         display.blit(game_screen, (0, TILE_SIZE))
         pygame.display.flip()

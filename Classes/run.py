@@ -1,8 +1,7 @@
 import pygame, sys, random
 from Classes.Snake import Snake
 from Classes.Menu import Menu
-from Classes.Button import Button
-from Classes.Top_records import Top_records
+from Classes.Top_records import Top
 FPS = 30
 win_weight, win_height = 400, 500
 TILE_SIZE = 20
@@ -40,6 +39,8 @@ class Run:
 
     def run_record_table(self):
         self.app_state = 'top_records'
+        rec = Top()
+        rec.run()
 
     def update(self):
         if self.app_state == 'menu':
