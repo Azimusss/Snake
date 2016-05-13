@@ -1,1 +1,22 @@
-[{"name": "nameless", "score": 68}, {"name": "azimut", "score": 27}, {"name": "vasya", "score": 20}, {"name": "petya", "score": 10}, {"name": "dicaprio i ego oskar", "score": 0}]
+[
+  {
+    "name": "nameless",
+    "score": 68
+  },
+  {
+    "name": "azimut",
+    "score": 27
+  },
+  {
+    "name": "vasya",
+    "score": 20
+  },
+  {
+    "name": "petya",
+    "score": 10
+  },
+  {
+    "name": "dicaprio i ego oskar",
+    "score": 0
+  }
+]
