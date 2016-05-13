@@ -1,11 +1,29 @@
 import math
 import os
 import json
+import pygame
+from settings import *
 
 DIR = ".."
 
 location = lambda x: os.path.join(
     os.path.dirname(os.path.realpath(__file__)), x)
+
+
+def load_image(name, alpha_cannel):
+    fullname = os.path.join(IMAGES_DIR, name)  # Указываем путь к папке с картинками
+
+    try:
+        image = pygame.image.load(fullname)  # Загружаем картинку и сохраняем поверхность (Surface)
+    except pygame.error:  # Если картинки нет на месте
+        print("Cannot load image:", name)
+        return 0
+    if alpha_cannel:
+        image = image.convert_alpha()
+    else:
+        image = image.convert()
+
+    return image
 
 
 def max_top(top_l):

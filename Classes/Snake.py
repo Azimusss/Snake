@@ -1,6 +1,6 @@
 import pygame, sys, random, json, os
 from pygame import *
-import settings
+from settings import *
 from Classes.Point import Point
 from utilities import *
 from Classes.TextBox import *
@@ -28,11 +28,12 @@ class Snake:
                       Point(start_x, start_y + 2), Point(start_x, start_y + 3)]
         self.menu = menu
         self.food = Point(-1, -1)
+        self.food_icon = load_image(os.path.join(IMAGES_DIR, 'Icon_food.png'), True)
         self.link_size = (TILE_SIZE, TILE_SIZE)
         self.link_img = pygame.Surface(self.link_size)
         self.i = 0
         self.field_size = Point(tile_wight, tile_height)
-        with open(os.path.join(settings.DATA_DIR, 'Top_Records.json')) as f:
+        with open(os.path.join(DATA_DIR, 'Top_Records.json')) as f:
             self.top = json.load(f)
         self.done = False
 
@@ -90,11 +91,9 @@ class Snake:
     def render(self, screen):
         for link in self.links:  # Отрисовка змея горыныча
             screen.blit(self.link_img, (link.x * self.link_size[0], link.y * self.link_size[1]))
-            screen.blit(self.link_img, (self.food.x * self.link_size[0], self.food.y * self.link_size[1]))
+            screen.blit(self.food_icon, (self.food.x * self.link_size[0], self.food.y * self.link_size[1]))
         font = pygame.font.SysFont("Courier New", 12)
         text = font.render(str(len(self.links)), 2, (0, 250, 0))
-        # pygame.draw.rect(screen, (0, 0, 255), ((0, 1), (field_width, field_height)), 1)
-        # pygame.draw.rect(game_screen, (255, 0, 0), game_screen.get_rect(), 2)       # рамка вокруг Surface'а
         screen.blit(text, self.pos_text)
 
     def move(self):
@@ -153,7 +152,7 @@ class Snake:
             name = main()
             self.top.append({"name": str(name), "score": len(self.links)})
             self.top = sorted(self.top, key=lambda x: x["score"], reverse=True)[:9]
-            save(self.top, 'C:\PycharmProjects\Snake\data\Top_Records.json')
+            save(self.top, os.path.join(DATA_DIR, 'Top_Records.json'))
             print("saved")
             self.game_over()
         else:

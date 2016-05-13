@@ -1,5 +1,6 @@
 import os
 import sys
+from settings import *
 
 import pygame
 
@@ -20,7 +21,7 @@ w,h - ширина и высота кнопки. Если не заданы, р�
 
 
 class Button:  # основная кнопка
-    def __init__(self, image_names, path='../images/Buttons', pos=(0, 0), function=None, parent=None, text='Simple Button',
+    def __init__(self, image_names, path=BUTTONS_PATH, pos=(0, 0), function=None, parent=None, text='Simple Button',
                  w=0, h=0):
         pygame.font.init()
         self.image_normal = load_image(image_names[0], alpha_channel=True,

@@ -3,6 +3,7 @@ from pygame import *
 from Classes.Button import Button
 from Classes.Snake import Snake
 from Classes.Top_records import *
+from settings import *
 
 FPS = 30
 win_weight, win_height = 1000, 700
@@ -17,13 +18,13 @@ class Menu:
     def __init__(self):
         pygame.display.set_mode((win_weight, win_height))  # создание окна
         self.start_b = Button(('button_on.png', 'button_hover.png', 'button_click.png'),
-                              path='../images/Buttons', pos=(410, 224), text='Start', function=self.start_game)
+                              path=BUTTONS_PATH, pos=(410, 224), text='Start', function=self.start_game)
         self.top_b = Button(('button_on.png', 'button_hover.png', 'button_click.png'),
-                              path='../images/Buttons', pos=(410, 287), text='Top Records', function=self.start_top)
+                              path=BUTTONS_PATH, pos=(410, 287), text='Top Records', function=self.start_top)
         self.setting_b = Button(('button_on.png', 'button_hover.png', 'button_click.png'),
-                              path='../images/Buttons', pos=(410, 350), text='Setting', function=None)
+                              path=BUTTONS_PATH, pos=(410, 350), text='Setting', function=None)
         self.exit_b = Button(('button_on.png', 'button_hover.png', 'button_click.png'),
-                              path='../images/Buttons', pos=(410, 413), text='Exit', function=self.close)
+                              path=BUTTONS_PATH, pos=(410, 413), text='Exit', function=self.close)
         self.done = True
 
     def close(self):
