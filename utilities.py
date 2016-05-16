@@ -6,8 +6,48 @@ from settings import *
 
 DIR = ".."
 
+
 location = lambda x: os.path.join(
     os.path.dirname(os.path.realpath(__file__)), x)
+
+
+def play_music(name):
+    try:
+        prepare_music(load_music(name))  # Проигрываем музыку.
+    except KeyboardInterrupt:
+        # Если пользователь прервёт проигрывание.
+        # Завершаем проигрывание, как положено.
+        pygame.mixer.music.fadeout(1000)
+        pygame.mixer.music.stop()
+        raise SystemExit
+
+
+def prepare_music(music_file):
+    clock = pygame.time.Clock()  # Инициализируе часы.
+    try:
+        pygame.mixer.music.load(music_file)  # Загружае файл.
+        print("Music file %s loaded!" % music_file)
+    except pygame.error:  # Ловим ошибки загрузки
+        print("File %s not found! (%s)" % (music_file, pygame.get_error()))
+        return
+    pygame.mixer.music.play()  # Проигрываем
+    while pygame.mixer.music.get_busy():  # Ожидаем завершение проигрывания
+        clock.tick(30)  # Запускаем задержку - разгрузить процессор.
+
+
+def load_music(name):
+    music_file = os.path.join(MUSIC_DIR, name)  # Определяе какой файл проигрывать
+
+    # Устанавливаем параметры Микшера.
+    freq = 44100     # audio CD quality
+    bitsize = -16    # unsigned 16 bit
+    channels = 2     # 1 is mono, 2 is stereo
+    buffer = 2048    # number of samples (experiment to get right sound)
+    # Инициализируем микшер.
+    pygame.mixer.init(freq, bitsize, channels, buffer)
+
+    pygame.mixer.music.set_volume(0.01)  # Устанавливаем грокость (максимум - 1).
+    return music_file
 
 
 def load_image(name, alpha_cannel):

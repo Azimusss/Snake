@@ -6,7 +6,6 @@ from Classes.Top_records import *
 from settings import *
 
 FPS = 30
-win_weight, win_height = 1000, 700
 TILE_SIZE = 20
 tile_wight = 40
 tile_height = 30
@@ -16,7 +15,7 @@ field_height = tile_height * TILE_SIZE
 
 class Menu:
     def __init__(self):
-        pygame.display.set_mode((win_weight, win_height))  # создание окна
+        pygame.display.set_mode((WIN_WIDHT, WIN_HEIGH))  # создание окна
         self.start_b = Button(('button_on.png', 'button_hover.png', 'button_click.png'),
                               path=BUTTONS_PATH, pos=(410, 224), text='Start', function=self.start_game)
         self.top_b = Button(('button_on.png', 'button_hover.png', 'button_click.png'),
@@ -24,6 +23,8 @@ class Menu:
         self.setting_b = Button(('button_on.png', 'button_hover.png', 'button_click.png'),
                               path=BUTTONS_PATH, pos=(410, 350), text='Setting', function=None)
         self.exit_b = Button(('button_on.png', 'button_hover.png', 'button_click.png'),
+                              path=BUTTONS_PATH, pos=(410, 413), text='Exit', function=self.close)
+        self.music_b = Button(('button_on.png', 'button_hover.png', 'button_click.png'),
                               path=BUTTONS_PATH, pos=(410, 413), text='Exit', function=self.close)
         self.done = True
 
@@ -60,7 +61,7 @@ class Menu:
         pygame.init()
         pygame.font.init()
         pygame.display.set_caption('Menu')
-        game_screen = pygame.Surface((win_weight, win_height))
+        game_screen = pygame.Surface((WIN_WIDHT, WIN_HEIGH))
         screen = pygame.display.get_surface()
         clock = pygame.time.Clock()
         while self.done:  # главный цикл программы

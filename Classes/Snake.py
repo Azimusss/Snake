@@ -4,6 +4,7 @@ from settings import *
 from Classes.Point import Point
 from utilities import *
 from Classes.TextBox import *
+from Classes.Music import Music
 
 NORMAL, LEFT, RIGHT, UP, DOWN, APPEND = 0, 1, 2, 3, 4, 5
 FPS = 15
@@ -153,12 +154,16 @@ class Snake:
             print('You Lose')
             self.game_over()
 
+    def play(self):
+        Music('JT_Machinima.mp3').play()
+
     def run_snake(self):
         game_screen = pygame.Surface((field_width, field_height))
         display = pygame.display.set_mode((field_width, field_height))  # создание окна
         screen = pygame.display.get_surface()
         pygame.display.set_caption('Snake')
         clock = pygame.time.Clock()
+
         while not self.done:  # главный цикл программы
             for e in pygame.event.get():  # цикл обработки очереди событий окна
                 if e.type == pygame.QUIT:
@@ -167,7 +172,6 @@ class Snake:
                     if e.key == pygame.K_ESCAPE:
                         self.game_over()
                 self.events(e)
-
             pygame.display.update()
             clock.tick(FPS)
             screen.fill((10, 20, 30))
@@ -182,9 +186,3 @@ class Snake:
             pygame.draw.line(game_screen, (0, 255, 0), (0, 0), (field_width, 0))
             display.blit(game_screen, (0, TILE_SIZE))
             pygame.display.flip()
-
-if __name__ == "__main__":
-    snake = Snake((4, 4), (0, 0, 0), (255, 255, 255),
-                  (pygame.K_a, pygame.K_d, pygame.K_w, pygame.K_s),
-                  4, 4, menu=None)
-    snake.run_snake()

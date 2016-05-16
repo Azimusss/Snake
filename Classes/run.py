@@ -2,8 +2,10 @@ import pygame, sys, random
 from Classes.Snake import Snake
 from Classes.Menu import Menu
 from Classes.Top_records import Top
+from settings import *
+from utilities import *
+
 FPS = 30
-win_weight, win_height = 400, 500
 TILE_SIZE = 20
 
 
@@ -12,7 +14,7 @@ class Run:
         self.app_state = 'menu'
         pygame.init()  # инициализация
         display = pygame.display.set_mode((400, 400))  # создание окна
-        game_screen = pygame.Surface((win_weight, win_height))
+        game_screen = pygame.Surface((WIN_WIDHT, WIN_HEIGH))
         screen = pygame.display.get_surface()
 
     def run_menu(self):
@@ -58,8 +60,8 @@ class Run:
             self.records.render(screen)
 
     def run(self):
-        game_screen = pygame.Surface((field_width, field_height))
-        display = pygame.display.set_mode((field_width, field_height))  # создание окна
+        game_screen = pygame.Surface((WIN_WIDHT, WIN_HEIGH))
+        display = pygame.display.set_mode((WIN_WIDHT, WIN_HEIGH))  # создание окна
         screen = pygame.display.get_surface()
         clock = pygame.time.Clock()
 

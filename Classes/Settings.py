@@ -1,5 +1,6 @@
+import sys, os
+from pygame import *
+from Classes.Button import Button
+from settings import *
 
 
-class Settings:
-    def __init__():
-        pass

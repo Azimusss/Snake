@@ -5,8 +5,6 @@ import json
 import settings
 from utilities import *
 
-win_weigh = 1000
-win_heigh = 700
 FPS = 30
 TILE_SIZE = 20
 tile_wight = 40
@@ -63,8 +61,8 @@ class Top:
     def start_menu(self):
         from Classes.Menu import Menu
         pygame.font.init()
-        game_screen = pygame.Surface((win_weigh, win_heigh))
-        display = pygame.display.set_mode((win_weigh, win_heigh))  # создание окна
+        game_screen = pygame.Surface((WIN_WIDHT, WIN_HEIGH))
+        display = pygame.display.set_mode((WIN_WIDHT, WIN_HEIGH))  # создание окна
         screen = pygame.display.get_surface()
         clock = pygame.time.Clock()
         mn = Menu()
@@ -74,7 +72,7 @@ class Top:
     def run(self):
         pygame.init()
         pygame.font.init()
-        pygame.display.set_mode((win_weigh, win_heigh))  # создание окна
+        pygame.display.set_mode((WIN_WIDHT, WIN_HEIGH))  # создание окна
         pygame.display.set_caption('Top Records')
         screen = pygame.display.get_surface()
 
