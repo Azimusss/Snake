@@ -62,7 +62,6 @@ class Snake:
             self.new_record_test()
         # COLLIDE SELF
         if len([el for el in self.links if self.links.count(el) > 1]) > 1:
-            print([el for el in self.links if self.links.count(el) > 1])
             self.new_record_test()
         self.eat()
 

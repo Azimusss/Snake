@@ -20,12 +20,10 @@ class Menu:
                               path=BUTTONS_PATH, pos=(410, 224), text='Start', function=self.start_game)
         self.top_b = Button(('button_on.png', 'button_hover.png', 'button_click.png'),
                               path=BUTTONS_PATH, pos=(410, 287), text='Top Records', function=self.start_top)
-        self.setting_b = Button(('button_on.png', 'button_hover.png', 'button_click.png'),
-                              path=BUTTONS_PATH, pos=(410, 350), text='Setting', function=None)
+        # self.setting_b = Button(('button_on.png', 'button_hover.png', 'button_click.png'),
+        #                       path=BUTTONS_PATH, pos=(410, 350), text='Setting', function=None)
         self.exit_b = Button(('button_on.png', 'button_hover.png', 'button_click.png'),
-                              path=BUTTONS_PATH, pos=(410, 413), text='Exit', function=self.close)
-        self.music_b = Button(('button_on.png', 'button_hover.png', 'button_click.png'),
-                              path=BUTTONS_PATH, pos=(410, 413), text='Exit', function=self.close)
+                              path=BUTTONS_PATH, pos=(410, 350), text='Exit', function=self.close)
         self.done = True
 
     def close(self):
@@ -36,13 +34,13 @@ class Menu:
 
     def events(self, event):
         self.start_b.event(event)
-        self.setting_b.event(event)
+        # self.setting_b.event(event)
         self.top_b.event(event)
         self.exit_b.event(event)
 
     def render(self, screen):
         self.start_b.render(screen)
-        self.setting_b.render(screen)
+        # self.setting_b.render(screen)
         self.top_b.render(screen)
         self.exit_b.render(screen)
 
